@@ -5,14 +5,6 @@
 #include <math.h>
 
 
-#ifndef HEIGHT
-#define HEIGHT 400
-#endif
-
-#ifndef WIDTH
-#define WIDTH 600
-#endif
-
 typedef unsigned char u8_t;
 typedef int32_t i32_t;
 typedef float f_t;
