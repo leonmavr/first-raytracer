@@ -2,6 +2,7 @@
 #define ENTITIES_H
 
 #include "math.h"
+#include <stdbool.h> 
 
 //----------------------------------------------------------------------------//
 // Solids                                                                    //
@@ -14,22 +15,10 @@ typedef enum {
 } solid_type_t;
 
 typedef struct {
-    vec3f_t origin[3];
-    solid_type_t type;  // identifies the type of solid
-    float diffusion;
-    float reflection;
-    float transparency;
-    float refraction;
-    vec3u8_t color;
-} solid_t;
-
-typedef struct {
-    solid_t attr;       // common attributes
     float rad;
 } sphere_t;
 
 typedef struct {
-    solid_t attr;       // common attributes
     float width;
     float height;
     // size of each square as a fraction of the width and height
@@ -37,16 +26,31 @@ typedef struct {
 } checkerboard_t;
 
 typedef struct {
-    solid_t attr;       // common attributes
     float size;
 } cube_t;
 
-// Cylinder structure
 typedef struct {
-    solid_t attr;       // common attributes
     float rad;          // Radius of the cylinder base
     float height;       // Height of the cylinder
 } cylinder_t;
+
+// Generic solid structure that can represent any solid 
+typedef struct {
+    solid_type_t type;   // identifies the type of solid
+    vec3f_t origin;
+    float diffusion;
+    float reflection;
+    float transparency;
+    float refraction;
+    vec3u8_t color; 
+    // it can contain information about one of the following solids 
+    union {
+        sphere_t sphere;
+        checkerboard_t checkerboard;
+        cube_t cube;
+        cylinder_t cylinder;
+    } geometry;
+} solid_t;
 
 void sphere_init(sphere_t* sph, solid_t attr, vec3f_t origin, float rad);
 void checkerboard_init(checkerboard_t* chboard, solid_t attr, float width,
@@ -56,7 +60,7 @@ void cylinder_init(cylinder_t* cylinder, solid_t attr, float rad, float height);
 
 
 //----------------------------------------------------------------------------//
-// Rendering                                                                 //
+// Rendering                                                                  //
 //----------------------------------------------------------------------------//
 
 
@@ -115,6 +119,7 @@ static camera_t camera;
 
 ray_t ray_make(vec3f_t origin, vec3f_t point);
 vec3f_t ray_at(ray_t ray_t, float t);
+void ray_intersect(ray_t* ray, solid_t* solid, vec3f_t intersection, bool has_inters);
 void camera_set(float cx, float cy, float f, float fov_deg);
 
 #endif // ENTITIES_H

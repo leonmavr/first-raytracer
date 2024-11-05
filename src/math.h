@@ -8,9 +8,9 @@
 typedef unsigned char u8_t;
 typedef int32_t i32_t;
 typedef float f_t;
-typedef struct vec3_u8_t { u8_t x, y, z; } vec3u8_t;
-typedef struct vec3_i32_t { i32_t x, y, z; } vec3i32_t;
-typedef struct vec3_f_t { float x, y, z; } vec3f_t;
+typedef struct { u8_t x, y, z; } vec3u8_t;
+typedef struct { i32_t x, y, z; } vec3i32_t;
+typedef struct { float x, y, z; } vec3f_t;
 
 //---------------------------------------------------------------------------//
 // type-agnostic implementations

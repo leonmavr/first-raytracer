@@ -1,12 +1,27 @@
 #include "src/math.h"
+#include "src/ppm_writer.h"
+#include "src/entities.h"
 //#include "src/entities.h"
 #include <stdint.h>
 #include <stdio.h>
 
+
+// Function to generate a green to blue vertical gradient
+void generate_gradient(int width, int height) {
+    for (int r = 0; r < height; ++r) {
+        uint8_t green = (uint8_t)(255 * (1.0 - (float)r / height)); // Green decreases
+        uint8_t blue = (uint8_t)(255 * ((float)r / height));        // Blue increases
+        for (int c = 0; c < width; ++c) {
+            pbuffer_write(c, r, 0, green, blue);
+        }
+    }
+}
+
 int main() {
-    vec3f_t v1 = {1.0, 0.5}, v2 = {0.001,-2}; 
-    float v3 = vec3_angle(v1, v2);
-    printf("%f\n", v3);
-    printf("%f, %f\n", vec3_add(v1, v2).x, vec3_div(v1, v2).y);
+
+    generate_gradient(PBUFFER_WIDTH, PBUFFER_HEIGHT);
+    pbuffer_save_ppm("out.ppm");
+
+    printf("Gradient image saved to %s\n", "out.ppm");
     return 0;
 }
