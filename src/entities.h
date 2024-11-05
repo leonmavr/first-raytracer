@@ -120,6 +120,6 @@ static camera_t camera;
 ray_t ray_make(vec3f_t origin, vec3f_t point);
 vec3f_t ray_at(ray_t ray_t, float t);
 void ray_intersect(ray_t* ray, solid_t* solid, vec3f_t intersection, bool has_inters);
-void camera_set(float cx, float cy, float f, float fov_deg);
+void camera_set(float cx, float cy, float f, float fovx_deg, float fovy_deg);
 
 #endif // ENTITIES_H
