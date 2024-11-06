@@ -29,7 +29,7 @@ typedef struct {
 } checkerboard_t;
 
 typedef struct {
-    float size;
+    float side;
 } cube_t;
 
 typedef struct {
@@ -38,7 +38,7 @@ typedef struct {
 } cylinder_t;
 
 // Generic solid structure that can represent any solid 
-typedef struct {
+typedef struct solid_t {
     solid_type_t type;   // identifies the type of solid
     vec3f_t origin;
     float diffusion;
@@ -52,15 +52,18 @@ typedef struct {
         checkerboard_t checkerboard;
         cube_t cube;
         cylinder_t cylinder;
-    } geometry;
+    };
 } solid_t;
 
-void sphere_init(sphere_t* sph, solid_t attr, vec3f_t origin, float rad);
-void checkerboard_init(checkerboard_t* chboard, solid_t attr, float width,
-    float height, float square_size_norm);
-void cube_init(cube_t* cube, solid_t attr, float size);
-void cylinder_init(cylinder_t* cylinder, solid_t attr, float rad, float height);
+typedef struct {
+    vec3f_t origin;
+    vec3f_t dir;    // direction unit vector
+} ray_t;
 
+vec3f_t ray_at(ray_t ray, float t);
+void sphere_init(solid_t* solid, float rad);
+// TODO: rest of solids
+vec3f_t ray_intersect(ray_t ray, solid_t* solid, bool* does_intersect);
 
 //----------------------------------------------------------------------------//
 // Rendering                                                                  //
@@ -102,8 +105,9 @@ typedef struct light_t {
 
 
 typedef struct lights_t {
-    light_t light[LIGHTS_CAPACITY];  // Fixed-size array of lights
-    size_t count;                     // Number of lights currently in the scene
+    light_t light[LIGHTS_CAPACITY];  // fixed-size array of lights
+    size_t count;                    // number of lights currently in the scene
+    // defines each light in the scene
     struct {
         void (*ambient_light)(float intensity);
         void (*point_light)(float intensity, float posx, float poxy, float posz);
@@ -127,12 +131,6 @@ void normalize(void);
 
 extern lights_t lights;
 
-
-//------------ later ------------------//
-typedef struct {
-    vec3f_t origin;
-    vec3f_t dir;    // direction unit vector
-} ray_t;
 
 
 #endif // ENTITIES_H

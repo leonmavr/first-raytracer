@@ -1,4 +1,43 @@
 #include "entities.h"
+#include "vmath.h"
+#include <stdbool.h>
+#include <math.h>
+
+
+vec3f_t ray_at(ray_t ray, float t) {
+    return (vec3f_t) {ray.origin.x + t*ray.dir.x, ray.origin.y + t*ray.dir.y, ray.origin.z + t*ray.dir.z};
+}
+
+vec3f_t ray_intersect(ray_t ray, solid_t* solid, bool* does_intersect) {
+    *does_intersect = false;
+    vec3f_t ret = {0, 0, 0};
+    switch (solid->type) {
+        case SOLID_SPHERE:
+            float r = solid->sphere.rad;
+            vec3f_t CO = vec3f_sub(ray.origin, solid->origin);
+            vec3f_t d = ray.dir;
+            float a = vec3f_dot(d, d);
+            float b = 2 * vec3f_dot(CO, d);
+            float c = vec3f_dot(CO, CO) - r*r;
+            float discriminant = b*b - 4*a*c;
+            if (discriminant < 0)
+                return ret;
+            float t1 = (-b + sqrt(discriminant)) / (2*a);
+            float t2 = (-b - sqrt(discriminant)) / (2*a);
+            float t = (t1 > 0 && (t2 <= 0 || t1 < t2)) ? t1 : t2;
+            ret = ray_at(ray, t);
+            *does_intersect = true;
+            break;
+        default:
+            return ret;
+    }
+    return ret;
+}
+
+void sphere_init(solid_t* solid, float rad) {
+    solid->type = SOLID_SPHERE;
+    solid->sphere.rad = rad;
+}
 
 lights_t lights;
 
