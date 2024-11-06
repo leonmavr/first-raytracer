@@ -1,5 +1,5 @@
-#include "src/ppm_writer.h"
-#include "src/entities.h"
+#include "ppm_writer.h"
+#include "entities.h"
 #include <stdint.h>
 #include <stdio.h>
 

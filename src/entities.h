@@ -1,7 +1,7 @@
 #ifndef ENTITIES_H
 #define ENTITIES_H
 
-#include "math.h"
+#include "vmath.h"
 #include <stdbool.h> 
 #include <stddef.h>  // size_t
 
