@@ -3,9 +3,12 @@
 
 #include "math.h"
 #include <stdbool.h> 
+#include <stddef.h>  // size_t
+
+#define LIGHTS_CAPACITY 50 // Maximum number of lights that can be added
 
 //----------------------------------------------------------------------------//
-// Solids                                                                    //
+// Solids                                                                     //
 //----------------------------------------------------------------------------//
 typedef enum {
     SOLID_SPHERE = 0,
@@ -62,64 +65,65 @@ void cylinder_init(cylinder_t* cylinder, solid_t attr, float rad, float height);
 //----------------------------------------------------------------------------//
 // Rendering                                                                  //
 //----------------------------------------------------------------------------//
-
-
-typedef struct {
-    vec3f_t origin;
-    vec3f_t dir;
-} ray_t;
-
 typedef enum {
-    LIGHT_AMB = 0, // ambient
-    LIGHT_POINT,   // point
-    LIGHT_DIR,     // directional
+    LIGHT_AMB = 0,  // ambient
+    LIGHT_POINT,    // point
+    LIGHT_DIR,      // directional
 } light_type_t;
+
 
 /** 
  * Light source model.
- * Each light source can have the following properties:
- * - type: identifier
- *     ambient/point/directional
- * - intensity: float
- *     0 to 1
- * - position: vec3  (only if type is point)
- * - direction: vec3  (only if type is directional)
+ * There are three types of lights:
+ * -- ambient - modelled as additive
+ *    Has:
+ *        - intensity
+ * -- positional - all originate from the same point
+ *    Has:
+ *        - intensity
+ *        - position
+ * -- directional - all have the same direction
+ *    Has:
+ *        - intensity
+ *        - direction 
+ * All intensities must sum to 1 to avoid overexposure.
  *
  * References:
- *   https://gabrielgambetta.com/computer-graphics-from-scratch/03-light.html
+ * https://gabrielgambetta.com/computer-graphics-from-scratch/03-light.html
  */
 typedef struct light_t {
     light_type_t type;
-    float intensity; // intensity contribution
+    float intensity;     // normalised intensity contribution
     union {
-        vec3i32_t dir; // direction in (3D) scene
-        vec3i32_t point; // point line (3D)
+        vec3f_t dir;     // unit vector 
+        vec3f_t point;
     } geometry;
 } light_t;
 
-/**
- * Collection of light sources. 
- */
+
 typedef struct lights_t {
-    // lights (ambient/directional/point) light sources
-    light_t** lights;
-    // number of lights
-    size_t n;
+    light_t light[LIGHTS_CAPACITY];  // Fixed-size array of lights
+    size_t count;                     // Number of lights currently in the scene
+    struct {
+        void (*ambient_light)(float intensity);
+        void (*point_light)(float intensity, vec3f_t position);
+        void (*dir_light)(float intensity, vec3f_t direction);
+    } add;
+    void (*init)(void);
+    void (*normalize)(void);
 } lights_t;
 
-typedef struct camera_t {
-    float cx;       // center x
-    float cy;       // center y
-    float f;        // focal length (in pixels)
-    float fovx_rad; // field of view along x axis (in rads)
-    float fovy_rad; // field of view along y ayis (in rads)
-} camera_t;
+void lights_init(void);
+void normalize(void);
 
-static camera_t camera;
+extern lights_t lights;
 
-ray_t ray_make(vec3f_t origin, vec3f_t point);
-vec3f_t ray_at(ray_t ray_t, float t);
-void ray_intersect(ray_t* ray, solid_t* solid, vec3f_t intersection, bool has_inters);
-void camera_set(float cx, float cy, float f, float fovx_deg, float fovy_deg);
+
+//------------ later ------------------//
+typedef struct {
+    vec3f_t origin;
+    vec3f_t dir;    // direction unit vector
+} ray_t;
+
 
 #endif // ENTITIES_H

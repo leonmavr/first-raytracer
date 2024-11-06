@@ -1,5 +1,5 @@
-#ifndef MATH_H
-#define MATH_H 
+#ifndef __MATH_H__
+#define __MATH_H__
 
 #include <stdint.h>
 #include <math.h>
@@ -79,42 +79,6 @@ typedef struct { float x, y, z; } vec3f_t;
         return acos(vec3##type##_cos(v1, v2));                        \
     }
 
-//---------------------------------------------------------------------------//
-// function definitions for each type
-//---------------------------------------------------------------------------//
-VEC_ADD(u8)
-VEC_ADD(i32)
-VEC_ADD(f)
-VEC_SUB(u8)
-VEC_SUB(i32)
-VEC_SUB(f)
-VEC_MUL(u8)
-VEC_MUL(i32)
-VEC_MUL(f)
-VEC_DIV(f)
-VEC_DIV(u8)
-VEC_DIV(i32)
-VEC_DOT(f)
-VEC_DOT(u8)
-VEC_DOT(i32)
-VEC_SCMUL(f)
-VEC_SCMUL(u8)
-VEC_SCMUL(i32)
-VEC_NORMSQ(f)
-VEC_NORMSQ(u8)
-VEC_NORMSQ(i32)
-VEC_NORM(f)
-VEC_NORM(u8)
-VEC_NORM(i32)
-VEC_UNIT(f)
-VEC_UNIT(u8)
-VEC_UNIT(i32)
-VEC_COS(f)
-VEC_COS(u8)
-VEC_COS(i32)
-VEC_ANGLE(f)
-VEC_ANGLE(u8)
-VEC_ANGLE(i32)
 
 //---------------------------------------------------------------------------//
 // macros for generic interface
@@ -175,4 +139,6 @@ VEC_ANGLE(i32)
     vec3f_t: vec3f_angle)(v1, v2)
 
 
-#endif // MATH_H 
+
+
+#endif // _MATH_H 
