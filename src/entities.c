@@ -1,19 +1,19 @@
 #include "entities.h"
 
-#if 1
-
 lights_t lights;
 
 static void ambient_light(float intensity) {
-    // TODO
+    lights.light[lights.count++].intensity = intensity;
 }
 
-static void point_light(float intensity, vec3f_t position) {
-
+static void point_light(float intensity, float posx, float posy, float posz) {
+    lights.light[lights.count].intensity = intensity;
+    lights.light[lights.count++].point = (vec3f_t) {posx, posy, posz};
 }
 
-static void dir_light(float intensity, vec3f_t direction) {
-
+static void dir_light(float intensity, float dirx, float diry, float dirz) {
+    lights.light[lights.count].intensity = intensity;
+    lights.light[lights.count++].dir = (vec3f_t) {dirx, diry, dirz};
 }
 
 void normalize(void) {
@@ -22,7 +22,6 @@ void normalize(void) {
         total_intensity += lights.light[i].intensity;
     for (int i = 0; i < lights.count; ++i)
         lights.light[i].intensity /= total_intensity;
-    
 }
 
 void lights_init(void) {
@@ -33,6 +32,3 @@ void lights_init(void) {
     lights.add.dir_light = dir_light;    
     lights.add.point_light = point_light;    
 }
-
-
-#endif

@@ -97,7 +97,7 @@ typedef struct light_t {
     union {
         vec3f_t dir;     // unit vector 
         vec3f_t point;
-    } geometry;
+    };
 } light_t;
 
 
@@ -106,14 +106,23 @@ typedef struct lights_t {
     size_t count;                     // Number of lights currently in the scene
     struct {
         void (*ambient_light)(float intensity);
-        void (*point_light)(float intensity, vec3f_t position);
-        void (*dir_light)(float intensity, vec3f_t direction);
+        void (*point_light)(float intensity, float posx, float poxy, float posz);
+        void (*dir_light)(float intensity, float dirx, float diry, float dirz);
     } add;
     void (*init)(void);
     void (*normalize)(void);
 } lights_t;
 
+
+/**
+ * Initialize function pointers and count - call this before adding ligfhts.
+ */
 void lights_init(void);
+
+/**
+ * It's a good practice to call this after adding all lights so their
+ * intensities add up to 1.
+ */
 void normalize(void);
 
 extern lights_t lights;

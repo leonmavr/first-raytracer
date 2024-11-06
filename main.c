@@ -1,12 +1,10 @@
-#include "src/math.h"
 #include "src/ppm_writer.h"
 #include "src/entities.h"
-//#include "src/entities.h"
 #include <stdint.h>
 #include <stdio.h>
 
 
-// Function to generate a green to blue vertical gradient
+#if 0
 void generate_gradient(int width, int height) {
     for (int r = 0; r < height; ++r) {
         uint8_t green = (uint8_t)(255 * (1.0 - (float)r / height)); // Green decreases
@@ -16,12 +14,16 @@ void generate_gradient(int width, int height) {
         }
     }
 }
+#endif
 
 int main() {
-
-    generate_gradient(PBUFFER_WIDTH, PBUFFER_HEIGHT);
-    pbuffer_save_ppm("out.ppm");
-
-    printf("Gradient image saved to %s\n", "out.ppm");
+    lights_init(); 
+    lights.add.ambient_light(2);
+    lights.add.dir_light(5, 0.2, 0.1, 0);
+    lights.add.point_light(3, 100, 120, 400 );
+    lights.normalize();
+    printf("%f\n", lights.light[2].intensity);
+    //pbuffer_save_ppm("out.ppm");
+    //printf("Gradient image saved to %s\n", "out.ppm");
     return 0;
 }
