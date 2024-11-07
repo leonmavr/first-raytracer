@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include <math.h>
 
+lights_t lights;
+camera_t camera;
 
 vec3f_t ray_at(ray_t ray, float t) {
     return (vec3f_t) {ray.origin.x + t*ray.dir.x, ray.origin.y + t*ray.dir.y, ray.origin.z + t*ray.dir.z};
@@ -39,7 +41,6 @@ void sphere_init(solid_t* solid, float rad) {
     solid->sphere.rad = rad;
 }
 
-lights_t lights;
 
 static void ambient_light(float intensity) {
     lights.light[lights.count++].intensity = intensity;
@@ -71,3 +72,29 @@ void lights_init(void) {
     lights.add.dir_light = dir_light;    
     lights.add.point_light = point_light;    
 }
+
+void camera_init(float cx, float cy, float f, float fovx_deg, float fovy_deg) {
+    camera.init = camera_init;
+    camera.persp_transform = camera_persp_transform;
+    camera.cx = cx;
+    camera.cy = cy;
+    camera.f = f;
+    camera.fovx_deg = fovx_deg;
+    camera.fovy_deg = fovy_deg;
+}
+
+vec3f_t camera_persp_transform(vec3f_t xyz) {
+    const float cx = camera.cx, cy = camera.cy, f = camera.f;
+    // to denote it's a 2D vector I set z=0
+    return (vec3f_t) {f*xyz.x/xyz.z - cx, f*xyz.y/xyz.z - cy, 0};
+}
+
+#if 0
+void camera_init(float cx, float cy, float f, float fovx_deg, float fovy_deg) {
+    camera.cx = cx;  
+    camera.cy = cy;  
+    camera.f = f;  
+    camera.fovx_deg = fovx_deg;  
+    camera.fovy_deg = fovy_deg;  
+}
+#endif

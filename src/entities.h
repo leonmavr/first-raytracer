@@ -131,6 +131,16 @@ void normalize(void);
 
 extern lights_t lights;
 
+typedef struct {
+    float cx, cy;             // origin on a constant-z plane
+    float f;                  // focal length
+    float fovx_deg, fovy_deg; // field of view in degrees
+    void (*init)(float cx, float cy, float f, float fovx_deg, float fovy_deg);
+    vec3f_t (*persp_transform)(vec3f_t xyz);
+} camera_t;
 
+void camera_init(float cx, float cy, float f, float fovx_deg, float fovy_deg);
+extern camera_t camera;
+vec3f_t camera_persp_transform(vec3f_t xyz);
 
 #endif // ENTITIES_H
