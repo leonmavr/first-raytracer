@@ -63,7 +63,6 @@ typedef struct {
 vec3f_t ray_at(ray_t ray, float t);
 ray_t ray_get(vec3f_t begin, vec3f_t end);
 void sphere_init(solid_t* solid, float rad);
-// TODO: rest of solids
 vec3f_t ray_intersect(ray_t ray, solid_t* solid, bool* does_intersect);
 
 //----------------------------------------------------------------------------//
@@ -105,7 +104,7 @@ typedef struct light_t {
 } light_t;
 
 
-typedef struct lights_t {
+typedef struct {
     light_t light[LIGHTS_CAPACITY];  // fixed-size array of lights
     size_t count;                    // number of lights currently in the scene
     // defines each light in the scene
@@ -135,13 +134,14 @@ extern lights_t lights;
 typedef struct {
     float cx, cy;             // origin on a constant-z plane
     float f;                  // focal length
-    float fovx_deg, fovy_deg; // field of view in degrees
+    struct {
+        float x0, y0, x1, y1;
+    } boundary;
     void (*init)(float cx, float cy, float f, float fovx_deg, float fovy_deg);
-    vec3f_t (*persp_transform)(vec3f_t xyz);
+    void (*project)(vec3f_t xyz, vec3f_t* projected, bool* is_visible);
 } camera_t;
 
 void camera_init(float cx, float cy, float f, float fovx_deg, float fovy_deg);
 extern camera_t camera;
-vec3f_t camera_persp_transform(vec3f_t xyz);
 
 #endif // ENTITIES_H
