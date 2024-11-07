@@ -61,6 +61,7 @@ typedef struct {
 } ray_t;
 
 vec3f_t ray_at(ray_t ray, float t);
+ray_t ray_get(vec3f_t begin, vec3f_t end);
 void sphere_init(solid_t* solid, float rad);
 // TODO: rest of solids
 vec3f_t ray_intersect(ray_t ray, solid_t* solid, bool* does_intersect);

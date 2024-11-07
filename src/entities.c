@@ -10,6 +10,13 @@ vec3f_t ray_at(ray_t ray, float t) {
     return (vec3f_t) {ray.origin.x + t*ray.dir.x, ray.origin.y + t*ray.dir.y, ray.origin.z + t*ray.dir.z};
 }
 
+ray_t ray_get(vec3f_t begin, vec3f_t end) {
+    ray_t ret;
+    ret.origin = begin;
+    ret.dir = vec3f_unit(vec3f_sub(end,begin)); 
+    return ret;
+}
+
 vec3f_t ray_intersect(ray_t ray, solid_t* solid, bool* does_intersect) {
     *does_intersect = false;
     vec3f_t ret = {0, 0, 0};

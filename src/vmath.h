@@ -70,6 +70,9 @@ typedef struct { float x, y, z; } vec3f_t;
         return sqrt(v1.x*v1.x + v1.y*v1.y + v1.z*v1.z);            \
     }
 
+#define DECL_VEC_UNIT(type)                                        \
+    vec3f_t vec3##type##_unit(vec3##type##_t v1);
+
 #define VEC_UNIT(type)                                             \
     vec3f_t vec3##type##_unit(vec3##type##_t v1) {                 \
         const float n = vec3##type##_norm(v1);                     \
@@ -98,6 +101,9 @@ DECL_VEC_SUB(i32);
 DECL_VEC_DOT(u8);
 DECL_VEC_DOT(f);
 DECL_VEC_DOT(i32);
+DECL_VEC_UNIT(u8);
+DECL_VEC_UNIT(f);
+DECL_VEC_UNIT(i32);
 
 
 #endif // _MATH_H 
