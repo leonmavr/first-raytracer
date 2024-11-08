@@ -86,28 +86,29 @@ void lights_init(void) {
     lights.add.point_light = point_light;    
 }
 
-static bool is_in_rectangle(vec3f_t point, float x0, float y0, float x1, float y1) {
+static bool camera_is_visible(vec3f_t xyz) {
     // assuming x0 <= x1, y0 <= y1
-    return (point.x > x0 && point.x < x1) &&
-           (point.y > y0 && point.y < y1);
+    return (xyz.x > camera.boundary.x0 && xyz.x < camera.boundary.x1) &&
+           (xyz.y > camera.boundary.y0 && xyz.y < camera.boundary.y1);
 }
 
-static void camera_project(vec3f_t xyz, vec3f_t* projected, bool* is_visible) {
+
+static vec3f_t camera_project(vec3f_t xyz) {
     const float cx = camera.cx, cy = camera.cy, f = camera.f;
     // to denote it's a 2D vector set z=0
-    *projected = (vec3f_t) {f*xyz.x/xyz.z - cx, f*xyz.y/xyz.z - cy, 0};
-    *is_visible = is_in_rectangle(*projected, camera.boundary.x0, camera.boundary.y0, camera.boundary.x1, camera.boundary.y1);
+    return (vec3f_t) {f*xyz.x/xyz.z - cx, f*xyz.y/xyz.z - cy, 0};
 }
 
 void camera_init(float cx, float cy, float f, float fovx_deg, float fovy_deg) {
     camera.init = camera_init;
     camera.project = camera_project;
+    camera.is_visible = camera_is_visible;
     camera.cx = cx;
     camera.cy = cy;
     camera.f = f;
-    camera.boundary.x0 = MIN(f*tan(DEG2RAD(fovx_deg)) + cx, f*tan(DEG2RAD(fovx_deg)) + cx);
-    camera.boundary.x1 = MAX(f*tan(DEG2RAD(fovx_deg)) + cx, f*tan(DEG2RAD(fovx_deg)) + cx);
-    camera.boundary.y0 = MIN(f*tan(DEG2RAD(fovy_deg)) + cy, f*tan(DEG2RAD(fovy_deg)) - cy);
-    camera.boundary.y1 = MAX(f*tan(DEG2RAD(fovy_deg)) + cy, f*tan(DEG2RAD(fovy_deg)) - cy);
+    camera.boundary.x0 = MIN(f*tan(DEG2RAD(fovx_deg/2)) + cx, f*tan(DEG2RAD(fovx_deg/2)) + cx);
+    camera.boundary.x1 = MAX(f*tan(DEG2RAD(fovx_deg/2)) + cx, f*tan(DEG2RAD(fovx_deg/2)) + cx);
+    camera.boundary.y0 = MIN(f*tan(DEG2RAD(fovy_deg/2)) + cy, f*tan(DEG2RAD(fovy_deg/2)) - cy);
+    camera.boundary.y1 = MAX(f*tan(DEG2RAD(fovy_deg/2)) + cy, f*tan(DEG2RAD(fovy_deg/2)) - cy);
 }
 

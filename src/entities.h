@@ -138,7 +138,8 @@ typedef struct {
         float x0, y0, x1, y1;
     } boundary;
     void (*init)(float cx, float cy, float f, float fovx_deg, float fovy_deg);
-    void (*project)(vec3f_t xyz, vec3f_t* projected, bool* is_visible);
+    vec3f_t (*project)(vec3f_t xyz);
+    bool (*is_visible)(vec3f_t xyz);
 } camera_t;
 
 void camera_init(float cx, float cy, float f, float fovx_deg, float fovy_deg);
